@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mealy &harr; Moore Automata Simulator | CSET302 Topic 14</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- Main Header -->
+    <header class="app-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="display: flex; flex-direction: column;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: #f8fafc;">
+                        AUTOSIM <span style="color: var(--primary);">Mealy &harr; Moore</span>
+                    </span>
+                    <span class="brand-badge">Topic 14</span>
+                </div>
+                <span style="font-size: 0.75rem; color: var(--text-muted);">
+                    CSET302: Automata Theory and Computability | 5-Member Team Simulator
+                </span>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="nav-tab-btn active" data-tab="tab-simulator">
+                <span>&#x25C9;</span> Simulator
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-stepper">
+                <span>&#x21C9;</span> Step-by-Step
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-batch">
+                <span>&#x2714;</span> Batch Validation
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-m1">
+                <span>&#x1F4CB;</span> M1 Design Review
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-m2">
+                <span>&#x1F4CA;</span> M2 Testing & Eval
+            </button>
+            <button class="nav-tab-btn" data-tab="tab-team">
+                <span>&#x1F465;</span> Team & Viva Prep
+            </button>
+        </nav>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <button id="btn-export-json" class="btn btn-outline btn-sm" title="Export Automaton JSON">
+                &#x21e9; Export JSON
+            </button>
+            <button id="btn-import-json" class="btn btn-outline btn-sm" title="Import Automaton JSON">
+                &#x21e7; Import JSON
+            </button>
+            <input type="file" id="import-json-file" accept=".json" style="display: none;">
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- ==========================================
+             TAB 1: SIMULATOR WORKSPACE
+             ========================================== -->
+        <div id="tab-simulator" class="tab-pane active">
+
+            <!-- Conversion Mode Toggle Bar -->
+            <div class="mode-switch-container">
+                <button id="mode-mealy-to-moore" class="mode-option-btn active">
+                    Mealy &rarr; Moore Conversion
+                </button>
+                <button id="mode-moore-to-mealy" class="mode-option-btn">
+                    Moore &rarr; Mealy Conversion
+                </button>
+            </div>
+
+            <div class="workspace-grid">
+
+                <!-- Left Sidebar: Definition & Transition Editor -->
+                <div class="cyber-card">
+                    <div class="card-header">
+                        <span class="card-title">
+                            <span style="color: var(--primary);">&#x25A3;</span> Dynamic Input Specification
+                        </span>
+                        <span id="source-type-label" class="badge-pass" style="color: var(--primary); border-color: var(--primary);">
+                            Mealy Machine
+                        </span>
+                    </div>
+
+                    <!-- Preset Picker -->
+                    <div class="form-group">
+                        <label class="form-label">Load Preset Automaton</label>
+                        <select id="preset-select" class="form-select"></select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="form-group">
+                            <label class="form-label">Machine Name</label>
+                            <input type="text" id="machine-name" class="form-input" value="101 Sequence Detector">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Initial State (q<sub>0</sub>)</label>
+                            <select id="initial-state-select" class="form-select"></select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="form-group">
+                            <label class="form-label">States (Q)</label>
+                            <input type="text" id="states-input" class="form-input" value="q0, q1, q2" placeholder="e.g. q0, q1, q2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Input Symbols (&Sigma;)</label>
+                            <input type="text" id="alphabet-input" class="form-input" value="0, 1" placeholder="e.g. 0, 1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Output Symbols (&Delta;)</label>
+                        <input type="text" id="output-alphabet-input" class="form-input" value="0, 1" placeholder="e.g. 0, 1">
+                    </div>
+
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <button id="btn-apply-definition" class="btn btn-outline btn-sm" style="flex: 1;">
+                            Update Structure
+                        </button>
+                        <button id="btn-add-state" class="btn btn-outline btn-sm">
+                            + Add State
+                        </button>
+                    </div>
+
+                    <!-- Matrix Table -->
+                    <label class="form-label">State Transition & Output Matrix</label>
+                    <div id="matrix-table-container" class="matrix-table-wrapper"></div>
+
+                    <!-- Mealy Specific Options -->
+                    <div id="mealy-specific-options" style="margin-top: 0.75rem;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); cursor: pointer;">
+                            <input type="checkbox" id="check-prune-unreachable" checked>
+                            Prune unreachable Moore states after conversion
+                        </label>
+                    </div>
+
+                    <div style="margin-top: 1rem;">
+                        <button id="btn-convert-trigger" class="btn btn-primary" style="width: 100%;">
+                            &#x21bb; Convert & Synthesize
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Dual Visualizer & String Processing -->
+                <div>
+
+                    <!-- Dual Diagrams -->
+                    <div class="diagrams-dual-grid">
+                        <div id="source-graph-container" class="graph-canvas-container"></div>
+                        <div id="target-graph-container" class="graph-canvas-container"></div>
+                    </div>
+
+                    <!-- String Processing Simulator Card -->
+                    <div class="cyber-card">
+                        <div class="card-header">
+                            <span class="card-title">
+                                <span style="color: var(--accent);">&#x25BA;</span> Dynamic String Processing & Output Verification
+                            </span>
+                            <span id="sim-step-status-text" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">
+                                Step 0 of 0
+                            </span>
+                        </div>
+
+                        <!-- Input Controls -->
+                        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 200px;">
+                                <input type="text" id="sim-input-string" class="form-input" style="font-family: var(--font-mono); font-size: 1.05rem;" placeholder="Enter input string (e.g. 10101)">
+                            </div>
+                            <div style="display: flex; gap: 0.35rem;">
+                                <button id="sim-reset-btn" class="btn btn-outline btn-sm" title="Reset Simulation">&#x23EE; Reset</button>
+                                <button id="sim-step-back-btn" class="btn btn-outline btn-sm" title="Step Back">&#x23EA; Step Back</button>
+                                <button id="sim-play-btn" class="btn btn-accent btn-sm" title="Play / Pause">&#9654; Run</button>
+                                <button id="sim-step-forward-btn" class="btn btn-outline btn-sm" title="Step Forward">&#x23E9; Step Next</button>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">SPEED</span>
+                                <input type="range" id="sim-speed-slider" min="150" max="2000" step="50" value="800" style="width: 80px;">
+                                <span id="sim-speed-value" style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-secondary); width: 32px;">0.8s</span>
+                            </div>
+                        </div>
+
+                        <!-- Sample Input Pills -->
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">PRESETS:</span>
+                            <div id="sample-pills-container" style="display: flex; gap: 0.35rem; flex-wrap: wrap;"></div>
+                        </div>
+
+                        <!-- Dual Tapes -->
+                        <div class="tape-display-container">
+                            <!-- Input Stream -->
+                            <div class="tape-row">
+                                <div class="tape-label">Input String (w)</div>
+                                <div id="tape-input-cells" class="tape-cells-stream"></div>
+                            </div>
+                            <!-- Mealy Stream -->
+                            <div class="tape-row">
+                                <div class="tape-label" style="color: var(--primary);">Mealy Output (&lambda;)</div>
+                                <div id="tape-mealy-cells" class="tape-cells-stream"></div>
+                            </div>
+                            <!-- Moore Stream -->
+                            <div class="tape-row">
+                                <div class="tape-label" style="color: var(--warning);">Moore Output</div>
+                                <div id="tape-moore-cells" class="tape-cells-stream"></div>
+                            </div>
+                        </div>
+
+                        <!-- Equivalence Banner -->
+                        <div id="sim-equivalence-banner" class="equivalence-banner"></div>
+
+                        <!-- Mathematical Proof Note -->
+                        <div class="math-banner" style="font-size: 0.8rem; margin-bottom: 0;">
+                            <strong>Equivalence Property:</strong>
+                            Moore outputs \(n+1\) symbols starting with \(\lambda_{Moore}(q_0)\).
+                            The response portion \(\lambda_{Moore}(w)[1 \dots n]\) is guaranteed to be bitwise identical to \(\lambda_{Mealy}(w)[0 \dots n-1]\).
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 2: STEP-BY-STEP CONVERSION
+             ========================================== -->
+        <div id="tab-stepper" class="tab-pane">
+            <div class="cyber-card">
+                <div class="stepper-header">
+                    <div>
+                        <span class="card-title" id="step-title-text">
+                            Step-by-Step Conversion Walkthrough
+                        </span>
+                        <p id="step-explanation-text" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.25rem;"></p>
+                    </div>
+                    <div style="display: flex; gap: 0.35rem;">
+                        <button id="btn-step-first" class="btn btn-outline btn-sm">&vert;&lt; First</button>
+                        <button id="btn-step-prev" class="btn btn-outline btn-sm">&lt; Previous</button>
+                        <button id="btn-step-next" class="btn btn-primary btn-sm">Next &gt;</button>
+                        <button id="btn-step-last" class="btn btn-outline btn-sm">Last &gt;&vert;</button>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: center; margin: 1rem 0;">
+                    <div id="stepper-dots-container" class="step-indicator-dots"></div>
+                </div>
+
+                <div id="step-details-container"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 3: BATCH TESTING & VALIDATION
+             ========================================== -->
+        <div id="tab-batch" class="tab-pane">
+            <div class="cyber-card">
+                <div class="card-header">
+                    <span class="card-title">
+                        <span style="color: var(--accent);">&#x2714;</span> Automated Equivalence Test Suite
+                    </span>
+                    <button id="btn-run-batch-tests" class="btn btn-accent btn-sm">
+                        &#9654; Execute Verification Suite
+                    </button>
+                </div>
+
+                <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Test multiple input strings simultaneously. The engine processes both the source and target converted automata, extracts the outputs, and validates whether the mathematical output equivalence condition holds.
+                </p>
+
+                <div class="form-group">
+                    <label class="form-label">Test Strings (One per line)</label>
+                    <textarea id="batch-test-inputs" class="form-input" rows="4" style="font-family: var(--font-mono); font-size: 0.9rem;">
+0
+1
+00
+01
+10
+11
+101
+10101
+111000
+1010101
+                    </textarea>
+                </div>
+
+                <div class="matrix-table-wrapper">
+                    <table class="batch-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Input (w)</th>
+                                <th>Length |w|</th>
+                                <th>Mealy Output</th>
+                                <th>Moore Output (Initial + Reaction)</th>
+                                <th>Equivalence Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="batch-results-tbody"></tbody>
+                    </table>
+                </div>
+
+                <div id="batch-summary-text" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-primary);"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 4: MILESTONE 1 (M1) DESIGN REVIEW
+             ========================================== -->
+        <div id="tab-m1" class="tab-pane">
+            <div class="cyber-card docs-prose">
+                <h2>Milestone 1: Problem Analysis & Project Design (5 Marks)</h2>
+                <div class="math-banner">
+                    Evaluation Period: 2-6 November 2026 | Course: CSET302 Automata Theory and Computability
+                </div>
+
+                <div class="docs-card">
+                    <h3>1. Problem Definition & Formal Automata Specifications (1 Mark)</h3>
+                    <p>
+                        Finite State Machines with outputs are categorized into two foundational formalisms:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Mealy Machine:</strong> A 6-tuple \(M_1 = (Q, \Sigma, \Delta, \delta, \lambda, q_0)\), where the output function \(\lambda: Q \times \Sigma \to \Delta\) associates output symbols with state transitions.
+                        </li>
+                        <li>
+                            <strong>Moore Machine:</strong> A 6-tuple \(M_2 = (Q', \Sigma, \Delta, \delta', \lambda', q_0')\), where the output function \(\lambda': Q' \to \Delta\) associates output symbols strictly with states.
+                        </li>
+                    </ul>
+                    <p>
+                        <strong>Conversion Equivalence Theorem:</strong> For any Mealy machine \(M_1\), there exists an equivalent Moore machine \(M_2\) such that for every input string \(w \in \Sigma^*\):
+                        \[
+                            \text{Output}_{M_2}(w) = \lambda'(q_0') \cdot \text{Output}_{M_1}(w)
+                        \]
+                        Conversely, for any Moore machine \(M_2\), there exists an equivalent Mealy machine \(M_1\) such that \(\text{Output}_{M_1}(w)\) matches the reaction output of \(M_2\) for all \(w\) with \(|w| \ge 1\).
+                    </p>
+                </div>
+
+                <div class="docs-card">
+                    <h3>2. Analysis of Existing Automata Tools & Feasibility (1 Mark)</h3>
+                    <div class="matrix-table-wrapper">
+                        <table class="matrix-table" style="font-family: var(--font-sans);">
+                            <thead>
+                                <tr>
+                                    <th>Feature / Parameter</th>
+                                    <th>JFLAP 7.1</th>
+                                    <th>AutomataLab / WebSim</th>
+                                    <th>Our Proposed AUTOSIM System</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Technology Stack</td>
+                                    <td>Legacy Java Swing (desktop app)</td>
+                                    <td>Basic JS / Canvas</td>
+                                    <td>Modern ES6 + SVG Drag/Pan/Zoom + Python Core</td>
+                                </tr>
+                                <tr>
+                                    <td>Mealy &harr; Moore Conversion</td>
+                                    <td>Separate tools, minimal steps</td>
+                                    <td>Static table conversion only</td>
+                                    <td>Bidirectional with interactive animated step-by-step audit</td>
+                                </tr>
+                                <tr>
+                                    <td>Real-time String Simulation</td>
+                                    <td>Step-through on single graph</td>
+                                    <td>Text-only output</td>
+                                    <td>Dual Synchronized Graphs + Tapes + Equivalence Badge</td>
+                                </tr>
+                                <tr>
+                                    <td>Edge Case & Reachability</td>
+                                    <td>Manual state cleanup</td>
+                                    <td>No reachability pruning</td>
+                                    <td>Automated BFS Reachability Analysis & State Pruning</td>
+                                </tr>
+                                <tr>
+                                    <td>Export & Portability</td>
+                                    <td>Proprietary .jff XML format</td>
+                                    <td>Limited export</td>
+                                    <td>Clean JSON, SVG vector export, Printable Academic Report</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-card">
+                    <h3>3. Simulator Architecture & Methodology (2 Marks)</h3>
+                    <p>
+                        The simulator is built on a modular, decoupled architecture following the strict standard:
+                        <br>
+                        <code>User Input &rarr; Formal Algorithm Engine &rarr; Step-by-Step Generator &rarr; Visual Graph Engine &rarr; Validation & Testing</code>
+                    </p>
+                    <div class="math-banner">
+                        <strong>Architecture Flow:</strong><br>
+                        1. <strong>Input Module:</strong> Matrix grid editor + preset parser + JSON schema validator.<br>
+                        2. <strong>Automata Core:</strong> Formal classes `MealyMachine` and `MooreMachine` implementing 6-tuple specifications.<br>
+                        3. <strong>Conversion Engine:</strong> State-splitting algorithm with BFS reachability and target-output inheritance.<br>
+                        4. <strong>Visualization Layer:</strong> Pure SVG visualizer supporting curved directed edges, self-loops, and real-time step highlighting.<br>
+                        5. <strong>Validation Engine:</strong> Synchronized tape animator with bit-for-bit equivalence comparison.
+                    </div>
+                </div>
+
+                <div class="docs-card">
+                    <h3>4. Selection & Correctness of Algorithms (1 Mark)</h3>
+                    <p><strong>Mealy to Moore Algorithm:</strong></p>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Compute incoming output set: \(Out(q) = \{ \lambda(p, a) \mid \delta(p, a) = q \}\) for all \(q \in Q\).</li>
+                        <li>For each \(b \in Out(q)\), create split state \(q_b\) with Moore state output \(\lambda'(q_b) = b\).</li>
+                        <li>Handle initial state: assign \((q_0, \lambda_0)\) where \(\lambda_0\) is designated initial symbol.</li>
+                        <li>Map transitions: \(\delta'((q, b), a) = (\delta(q, a), \lambda(q, a))\).</li>
+                        <li>Execute BFS from \((q_0, \lambda_0)\) to identify and prune unreachable states.</li>
+                    </ol>
+                    <p style="margin-top: 0.75rem;"><strong>Moore to Mealy Algorithm:</strong></p>
+                    <ol style="margin-left: 1.5rem;">
+                        <li>Retain state set \(Q_{Mealy} = Q_{Moore}\) and initial state \(q_0\).</li>
+                        <li>For each transition \(\delta(q, a) = q'\), assign Mealy transition output: \(\lambda_{Mealy}(q, a) = \lambda_{Moore}(q')\).</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 5: MILESTONE 2 (M2) TESTING & EVALUATION
+             ========================================== -->
+        <div id="tab-m2" class="tab-pane">
+            <div class="cyber-card docs-prose">
+                <h2>Milestone 2: Implementation, Testing & Demonstration (9 Marks)</h2>
+                <div class="math-banner">
+                    Evaluation Period: 23-27 November 2026 | Focus: Working Simulator, Edge Cases, Verification
+                </div>
+
+                <div class="docs-card">
+                    <h3>1. Implementation Coverage of Planned Features (2 Marks)</h3>
+                    <ul>
+                        <li>&check; Full bidirectional conversion (Mealy &rarr; Moore and Moore &rarr; Mealy).</li>
+                        <li>&check; Dynamic matrix input with real-time state, symbol, and transition additions.</li>
+                        <li>&check; Interactive SVG graph visualizer with draggable nodes, curved arcs, and auto-layout.</li>
+                        <li>&check; Synchronized dual-tape simulation with step-by-step animation and speed adjustment.</li>
+                        <li>&check; Step-by-step conversion audit trail with mathematical justifications at every step.</li>
+                        <li>&check; Automated batch test suite with timing and pass/fail reporting.</li>
+                    </ul>
+                </div>
+
+                <div class="docs-card">
+                    <h3>2. Demonstration & Test Case Suite (2 Marks)</h3>
+                    <div class="matrix-table-wrapper">
+                        <table class="matrix-table" style="font-family: var(--font-sans);">
+                            <thead>
+                                <tr>
+                                    <th>Test Case ID</th>
+                                    <th>Automaton Type & Purpose</th>
+                                    <th>Normal / Edge Case</th>
+                                    <th>Expected Theoretical Result</th>
+                                    <th>Verification Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>TC-01</td>
+                                    <td>Sequence Detector "101" (Mealy)</td>
+                                    <td>Normal (Overlapping Substring)</td>
+                                    <td>Mealy outputs '1' at end of '101'; Moore produces matching shifted stream</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TC-02</td>
+                                    <td>2's Complement Generator</td>
+                                    <td>Normal (LSB-to-MSB stream)</td>
+                                    <td>Copies bits until first '1', inverts remainder; outputs identical reaction</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TC-03</td>
+                                    <td>1's Complement Inverter</td>
+                                    <td>Edge Case (Single-state machine)</td>
+                                    <td>Single state splits into 2 Moore states with self-loops; full equivalence</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TC-04</td>
+                                    <td>Parity Bit Generator (Moore)</td>
+                                    <td>Normal (Moore to Mealy)</td>
+                                    <td>State count preserved (2 states); Mealy outputs parity transitions</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TC-05</td>
+                                    <td>Modulo-3 Binary Counter (Moore)</td>
+                                    <td>Normal (3 output symbols: 0, 1, 2)</td>
+                                    <td>Converted Mealy correctly reflects remainder on every incoming bit</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TC-06</td>
+                                    <td>Multi-Split Machine</td>
+                                    <td>Edge Case (3 distinct incoming outputs)</td>
+                                    <td>State Q2 splits into 3 distinct Moore states Q2_0, Q2_1, Q2_2</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>TC-07</td>
+                                    <td>Empty String &epsilon;</td>
+                                    <td>Edge Case (Length 0 input)</td>
+                                    <td>Mealy produces &epsilon;; Moore produces single symbol \(\lambda(q_0)\)</td>
+                                    <td><span class="badge-pass">PASS</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="docs-card">
+                    <h3>3. Formal Equivalence Proof Summary</h3>
+                    <p>
+                        Let \(M_1 = (Q, \Sigma, \Delta, \delta, \lambda, q_0)\) be a Mealy machine and \(M_2 = (Q', \Sigma, \Delta, \delta', \lambda', q_0')\) be the converted Moore machine constructed via the state splitting algorithm.
+                        <br>
+                        <strong>Basis:</strong> For \(|w| = 0\) (empty string \(\epsilon\)):
+                        \(\text{Output}_{M_1}(\epsilon) = \epsilon\), while \(\text{Output}_{M_2}(\epsilon) = \lambda'(q_0')\). Thus \(\text{Output}_{M_2}(\epsilon) = \lambda'(q_0') \cdot \text{Output}_{M_1}(\epsilon)\).
+                        <br>
+                        <strong>Inductive Step:</strong> Assume the hypothesis holds for string \(w = a_1 \dots a_k\). For string \(wa = a_1 \dots a_k a_{k+1}\):
+                        Let state reached by \(M_1\) after \(w\) be \(q_k\). The \((k+1)\)-th output of \(M_1\) is \(\lambda(q_k, a)\).
+                        In \(M_2\), the state reached is \((q_{k+1}, \lambda(q_k, a))\), whose state output is defined as \(\lambda(q_k, a)\).
+                        Therefore, the \((k+2)\)-th symbol of \(M_2\) equals the \((k+1)\)-th symbol of \(M_1\). By mathematical induction, output equivalence holds for all strings in \(\Sigma^*\).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             TAB 6: TEAM CONTRIBUTION & VIVA PREPARATION
+             ========================================== -->
+        <div id="tab-team" class="tab-pane">
+            <div class="cyber-card docs-prose">
+                <h2>Team Contribution Breakdown & Viva Voce Preparation Guide</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Prepared for individual accountability evaluation (Section 9: "Every member should be prepared to explain the problem, relevant Automata Theory concepts, algorithm, their own contribution, input/output processing, important test cases, edge cases and project limitations").
+                </p>
+
+                <!-- 5 Member Work Division -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div class="team-member-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 1: Formal Modeling & Architecture Lead</strong>
+                            <span class="badge-pass">Formal 6-Tuple & Architecture</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+                            <strong>Core Responsibilities:</strong> Designed formal 6-tuple definitions for Mealy and Moore machines in both Python and JavaScript; formulated data models and input validation constraints; authored Milestone-1 architectural specifications.
+                            <br>
+                            <strong>Viva Focus:</strong> Formal definitions of FSM with output, domain and codomain of transition (\(\delta\)) and output (\(\lambda\)) functions.
+                        </p>
+                    </div>
+
+                    <div class="team-member-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 2: Mealy &rarr; Moore Conversion & State Splitting</strong>
+                            <span class="badge-pass">Algorithm Implementation</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+                            <strong>Core Responsibilities:</strong> Implemented incoming transitions analyzer, state splitting algorithm (\(q \to q_{b_1}, q_{b_2}\)), start state handling convention, and step-by-step conversion audit generator.
+                            <br>
+                            <strong>Viva Focus:</strong> Why state splitting is necessary, upper bound on the number of generated Moore states (\(|Q_{Moore}| \le |Q_{Mealy}| \times |\Delta|\)), and handling of initial state \(q_0\).
+                        </p>
+                    </div>
+
+                    <div class="team-member-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 3: Moore &rarr; Mealy Conversion & Equivalence Proofs</strong>
+                            <span class="badge-pass">Algorithm & Mathematical Proof</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+                            <strong>Core Responsibilities:</strong> Implemented deterministic 1-step Moore to Mealy output mapping (\(\lambda_{Mealy}(q, a) = \lambda_{Moore}(\delta(q, a))\)); authored formal inductive equivalence proof; proved relationship between output string lengths (\(n\) vs \(n+1\)).
+                            <br>
+                            <strong>Viva Focus:</strong> Why Moore to Mealy never increases the number of states, and why Moore output has length \(n+1\) for input of length \(n\).
+                        </p>
+                    </div>
+
+                    <div class="team-member-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 4: Interactive Graph Visualizer & Animation Engine</strong>
+                            <span class="badge-pass">UI & Visualization</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+                            <strong>Core Responsibilities:</strong> Built SVG state diagram renderer with draggable nodes, curved directed edges, self-loop arcs, and SVG vector export; engineered synchronized node and edge pulsing animations during simulation.
+                            <br>
+                            <strong>Viva Focus:</strong> Visual distinctions between Mealy diagrams (edges with \(a/b\)) and Moore diagrams (states with \(q/b\)), graph layout algorithms.
+                        </p>
+                    </div>
+
+                    <div class="team-member-card">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 5: Verification Suite, Edge Cases & Testing Lead</strong>
+                            <span class="badge-pass">Verification & Quality</span>
+                        </div>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
+                            <strong>Core Responsibilities:</strong> Designed automated batch test runner; developed preset library (2's complement, 1's complement, 101 detector, parity, mod 3); implemented BFS reachability pruning; authored Pytest test suite with 100% algorithm pass rate.
+                            <br>
+                            <strong>Viva Focus:</strong> Edge cases (unreachable states, empty string \(\epsilon\), single state machines), Pytest coverage, verification criteria.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Viva Voce Q&A Bank -->
+                <h3>Frequently Asked Viva Voce Questions & Model Answers</h3>
+
+                <div class="docs-card">
+                    <p><strong>Q1: What is the fundamental theoretical difference between a Mealy and a Moore machine?</strong></p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <strong>Ans:</strong> In a Mealy machine, output is a function of both the current state and the input symbol (\(\lambda: Q \times \Sigma \to \Delta\)). In a Moore machine, output depends solely upon the current state (\(\lambda: Q \to \Delta\)). Consequently, for an input string of length \(n\), a Mealy machine emits \(n\) output symbols, whereas a Moore machine emits \(n+1\) symbols because it emits an initial output upon entering the start state prior to reading any input.
+                    </p>
+                </div>
+
+                <div class="docs-card">
+                    <p><strong>Q2: Why does converting Mealy to Moore sometimes increase the number of states?</strong></p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <strong>Ans:</strong> A state \(q\) in a Mealy machine might be entered by multiple transitions producing different output symbols (e.g. entering \(q\) with output 0 on one transition and output 1 on another). Because a Moore machine state can only have one fixed output, \(q\) must split into multiple states \((q, 0)\) and \((q, 1)\). The maximum number of states in the converted Moore machine is \(|Q_{Mealy}| \times |\Delta|\).
+                    </p>
+                </div>
+
+                <div class="docs-card">
+                    <p><strong>Q3: Does converting Moore to Mealy ever change the number of states?</strong></p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <strong>Ans:</strong> No. The state set \(Q\), initial state \(q_0\), and transition function \(\delta\) remain completely identical. Each transition \(\delta(q, a) = q'\) simply inherits the output of the target state: \(\lambda_{Mealy}(q, a) = \lambda_{Moore}(q')\).
+                    </p>
+                </div>
+
+                <div class="docs-card">
+                    <p><strong>Q4: How do you formally define equivalence between a Mealy and a Moore machine?</strong></p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <strong>Ans:</strong> Two machines \(M_1\) (Mealy) and \(M_2\) (Moore) are equivalent if for all input strings \(w \in \Sigma^*\), \(\text{Output}_{M_2}(w) = \lambda_{M_2}(q_0) \cdot \text{Output}_{M_1}(w)\). That is, when the initial symbol emitted by the Moore machine before reading input is disregarded, both machines produce identical output strings of length \(n\).
+                    </p>
+                </div>
+
+                <div class="docs-card">
+                    <p><strong>Q5: What happens when the initial state \(q_0\) in a Mealy machine has no incoming transitions?</strong></p>
+                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                        <strong>Ans:</strong> If \(q_0\) has no incoming transitions, it has no transition output associated with entering it. In the converted Moore machine, \(q_0\) is assigned an arbitrary default output symbol from \(\Delta\) (typically the first symbol in \(\Delta\) or a designated dummy symbol \(\lambda_0\)). Since this symbol is only emitted at step 0 before any input is read, it does not affect reaction equivalence.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Core Scripts -->
+    <script src="js/mealy_moore_core.js"></script>
+    <script src="js/presets.js"></script>
+    <script src="js/graph_visualizer.js"></script>
+    <script src="js/simulation_engine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,6 @@
+# Dependencies for AUTOSIM: Mealy <-> Moore Automata Simulator
+# Core web application runs with ZERO dependencies (pure HTML5/CSS3/ES6 in any modern browser)
+# The following libraries are used for Python verification testing and PDF report generation:
+
+pytest>=8.0.0
+reportlab>=4.0.0
