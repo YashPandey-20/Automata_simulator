@@ -33,3 +33,4 @@ jobs:
     - name: Verify PDF Report Generation
       run: |
         python generate_report_pdf.py
+
