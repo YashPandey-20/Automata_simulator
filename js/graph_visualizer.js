@@ -78,28 +78,21 @@ class AutomataGraphVisualizer {
         this.svg.style.cursor = "grab";
         this.svg.style.display = "block";
 
-        // Defs (Arrowheads, filters)
+        // Defs (Arrowheads)
         this.defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
         this.defs.innerHTML = `
             <marker id="arrow-${this.container.id}" viewBox="0 0 10 10" refX="22" refY="5"
                     markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#64748b" />
+                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#3d3d3a" />
             </marker>
             <marker id="arrow-active-${this.container.id}" viewBox="0 0 10 10" refX="22" refY="5"
                     markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-                <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+                <path d="M 0 1 L 10 5 L 0 9 z" fill="#d97757" />
             </marker>
             <marker id="start-arrow-${this.container.id}" viewBox="0 0 10 10" refX="20" refY="5"
                     markerWidth="6" markerHeight="6" orient="auto">
-                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#10b981" />
+                <path d="M 0 1.5 L 10 5 L 0 8.5 z" fill="#141413" />
             </marker>
-            <filter id="glow-${this.container.id}" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                    <feMergeNode in="blur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-            </filter>
         `;
         this.svg.appendChild(this.defs);
 
@@ -272,7 +265,7 @@ class AutomataGraphVisualizer {
         if (this.nodes.length === 0) {
             this.nodesGroup.innerHTML = `
                 <text x="${this.options.width / 2}" y="${this.options.height / 2}"
-                      fill="#64748b" text-anchor="middle" font-size="14">
+                      fill="#5e5d59" text-anchor="middle" font-size="14" font-family="'Space Grotesk', sans-serif">
                     No automaton loaded
                 </text>
             `;
@@ -293,9 +286,9 @@ class AutomataGraphVisualizer {
 
             startG.innerHTML = `
                 <path d="M ${sx} ${sy} L ${initialNode.x - 2} ${initialNode.y}"
-                      stroke="#10b981" stroke-width="2.5" stroke-linecap="round"
+                      stroke="#141413" stroke-width="2" stroke-linecap="round"
                       marker-end="url(#start-arrow-${this.container.id})" />
-                <text x="${sx - 6}" y="${sy + 4}" fill="#10b981" font-size="11" font-weight="bold" text-anchor="end">
+                <text x="${sx - 6}" y="${sy + 4}" fill="#141413" font-size="10.5" font-family="'Space Grotesk', sans-serif" font-weight="700" text-anchor="end">
                     START
                 </text>
             `;
@@ -335,34 +328,33 @@ class AutomataGraphVisualizer {
         g.style.cursor = "pointer";
 
         const r = this.options.nodeRadius;
-        const strokeColor = isActive ? "#38bdf8" : (node.isInitial ? "#10b981" : "#475569");
-        const fillColor = isActive ? "rgba(56, 189, 248, 0.15)" : "#0f172a";
-        const filterAttr = isActive ? `filter="url(#glow-${this.container.id})"` : "";
+        const strokeColor = isActive ? "#d97757" : (node.isInitial ? "#141413" : "#3d3d3a");
+        const fillColor = isActive ? "rgba(217, 119, 87, 0.12)" : "#ffffff";
 
         // Determine labels
         let labelMarkup = "";
         if (this.machine.type === "Moore") {
             // Display state name and output, e.g. "q0 / 0"
             labelMarkup = `
-                <text y="-4" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">
+                <text y="-4" fill="#141413" font-size="13" font-weight="bold" font-family="'Space Grotesk', sans-serif" text-anchor="middle">
                     ${escapeXml(node.label)}
                 </text>
-                <line x1="${-r + 8}" y1="2" x2="${r - 8}" y2="2" stroke="#475569" stroke-width="1" />
-                <text y="16" fill="#38bdf8" font-size="11" font-weight="semibold" text-anchor="middle">
+                <line x1="${-r + 8}" y1="2" x2="${r - 8}" y2="2" stroke="#d1cfc5" stroke-width="1" />
+                <text y="16" fill="#a6482d" font-size="11" font-weight="600" font-family="'IBM Plex Mono', monospace" text-anchor="middle">
                     ${escapeXml(node.output || "")}
                 </text>
             `;
         } else {
             // Mealy: Display state name inside circle
             labelMarkup = `
-                <text y="5" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">
+                <text y="5" fill="#141413" font-size="13.5" font-weight="bold" font-family="'Space Grotesk', sans-serif" text-anchor="middle">
                     ${escapeXml(node.label)}
                 </text>
             `;
         }
 
         g.innerHTML = `
-            <circle r="${r}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${isActive ? 3.5 : 2.5}" ${filterAttr} />
+            <circle r="${r}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="${isActive ? 3 : 2}" />
             ${labelMarkup}
         `;
 
@@ -374,8 +366,8 @@ class AutomataGraphVisualizer {
         g.setAttribute("class", `edge-group ${isActive ? "active-edge" : ""}`);
 
         const markerId = isActive ? `arrow-active-${this.container.id}` : `arrow-${this.container.id}`;
-        const strokeColor = isActive ? "#38bdf8" : "#64748b";
-        const strokeWidth = isActive ? 3 : 1.8;
+        const strokeColor = isActive ? "#d97757" : "#3d3d3a";
+        const strokeWidth = isActive ? 2.6 : 1.6;
         const labelsText = edge.labels.join(", ");
 
         let pathD = "";
@@ -423,9 +415,9 @@ class AutomataGraphVisualizer {
             <g transform="translate(${labelX}, ${labelY})">
                 <rect x="${-labelsText.length * 4.2 - 6}" y="-11"
                       width="${labelsText.length * 8.4 + 12}" height="20" rx="4"
-                      fill="#0f172a" stroke="${isActive ? '#38bdf8' : '#334155'}" stroke-width="1.2" />
-                <text y="3" fill="${isActive ? '#38bdf8' : '#e2e8f0'}"
-                      font-size="11" font-weight="bold" text-anchor="middle">
+                      fill="#ffffff" stroke="${isActive ? '#d97757' : '#d1cfc5'}" stroke-width="${isActive ? 1.5 : 1}" />
+                <text y="3" fill="${isActive ? '#a6482d' : '#141413'}"
+                      font-size="11" font-weight="600" font-family="'IBM Plex Mono', monospace" text-anchor="middle">
                     ${escapeXml(labelsText)}
                 </text>
             </g>

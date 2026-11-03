@@ -314,7 +314,7 @@ class AutomataApp {
         const thead = document.createElement("thead");
         let headerRow = `<tr><th>State</th>`;
         if (machine.type === "Moore") {
-            headerRow += `<th style="color: #38bdf8;">State Output (λ)</th>`;
+            headerRow += `<th style="color: var(--color-clay-deep);">State Output (λ)</th>`;
         }
         for (const a of machine.alphabet) {
             headerRow += `<th>Input [${escapeHtml(a)}] Next${machine.type === "Mealy" ? " & Out" : ""}</th>`;
@@ -327,7 +327,7 @@ class AutomataApp {
         const tbody = document.createElement("tbody");
         for (const s of machine.states) {
             const tr = document.createElement("tr");
-            let rowHtml = `<td style="font-weight: bold; color: ${s === machine.initialState ? '#10b981' : '#f8fafc'};">
+            let rowHtml = `<td style="font-weight: 700; color: ${s === machine.initialState ? 'var(--color-clay-deep)' : 'var(--color-ink)'};">
                 ${s === machine.initialState ? '→ ' : ''}${escapeHtml(s)}
             </td>`;
 
@@ -349,8 +349,8 @@ class AutomataApp {
                             <select class="matrix-cell-input mealy-dest-cell" data-from="${s}" data-sym="${a}">
                                 ${machine.states.map(st => `<option value="${st}" ${st === nextState ? "selected" : ""}>${st}</option>`).join("")}
                             </select>
-                            <span style="color: #64748b;">/</span>
-                            <select class="matrix-cell-input mealy-out-cell" data-from="${s}" data-sym="${a}" style="width: 55px; color: #38bdf8;">
+                            <span style="color: var(--color-hairline-dark);">/</span>
+                            <select class="matrix-cell-input mealy-out-cell" data-from="${s}" data-sym="${a}" style="width: 55px; color: var(--color-clay-deep); font-weight: 600;">
                                 ${machine.outputAlphabet.map(o => `<option value="${o}" ${o === outSym ? "selected" : ""}>${o}</option>`).join("")}
                             </select>
                         </div>
@@ -521,9 +521,9 @@ class AutomataApp {
             let rows = "";
             for (const [st, outs] of Object.entries(map)) {
                 rows += `<tr>
-                    <td style="font-weight: bold; color: #38bdf8;">${escapeHtml(st)}</td>
-                    <td>${outs.length > 0 ? outs.map(o => `<span class="badge-pass" style="color: #38bdf8; border-color: #38bdf8;">${o}</span>`).join(" ") : '<span style="color:#64748b;">(No incoming transitions)</span>'}</td>
-                    <td>${outs.length === 0 ? "Default initial / unreachable" : (outs.length === 1 ? "1 (Single Moore state)" : `${outs.length} (Splits into ${outs.length} states!)`)}</td>
+                    <td style="font-weight: 700; color: var(--color-ink);">${escapeHtml(st)}</td>
+                    <td>${outs.length > 0 ? outs.map(o => `<span class="badge-pass">${o}</span>`).join(" ") : '<span style="color:var(--color-text-muted);">(No incoming transitions)</span>'}</td>
+                    <td style="color: var(--color-ink-soft);">${outs.length === 0 ? "Default initial / unreachable" : (outs.length === 1 ? "1 (Single Moore state)" : `${outs.length} (Splits into ${outs.length} states!)`)}</td>
                 </tr>`;
             }
             return `
@@ -543,15 +543,15 @@ class AutomataApp {
             let rows = "";
             splits.forEach(s => {
                 rows += `<tr>
-                    <td style="font-weight: bold;">${s.isInitial ? "→ " : ""}${escapeHtml(s.originalState)}</td>
-                    <td>${escapeHtml(s.incomingOutputs)}</td>
-                    <td>${s.generatedStates.map(ns => `<code style="color: #10b981;">${ns}</code>`).join(", ")}</td>
+                    <td style="font-weight: 700; color: var(--color-ink);">${s.isInitial ? "→ " : ""}${escapeHtml(s.originalState)}</td>
+                    <td style="color: var(--color-ink-soft);">${escapeHtml(s.incomingOutputs)}</td>
+                    <td>${s.generatedStates.map(ns => `<code style="color: var(--color-clay-deep);">${ns}</code>`).join(", ")}</td>
                 </tr>`;
             });
             return `
                 <div class="math-banner">
-                    Initial Moore State: <strong style="color: #10b981;">${step.details.initialMooreState}</strong> &nbsp;|&nbsp;
-                    Total Moore States: <strong style="color: #38bdf8;">${step.details.totalMooreStates}</strong>
+                    Initial Moore State: <strong style="color: var(--color-clay-deep);">${step.details.initialMooreState}</strong> &nbsp;|&nbsp;
+                    Total Moore States: <strong style="color: var(--color-ink);">${step.details.totalMooreStates}</strong>
                 </div>
                 <div class="matrix-table-wrapper">
                     <table class="matrix-table">
@@ -570,9 +570,9 @@ class AutomataApp {
             logs.forEach(l => {
                 rows += `<tr>
                     <td><code>${escapeHtml(l.fromState)}</code></td>
-                    <td style="color: #38bdf8; font-weight: bold;">${escapeHtml(l.input)}</td>
-                    <td style="color: #94a3b8; font-size: 0.8rem;">${escapeHtml(l.underlyingTransition)}</td>
-                    <td style="color: #10b981; font-weight: bold;"><code>${escapeHtml(l.targetState)}</code></td>
+                    <td style="color: var(--color-clay-deep); font-weight: 700;">${escapeHtml(l.input)}</td>
+                    <td style="color: var(--color-ink-soft); font-size: 0.8rem;">${escapeHtml(l.underlyingTransition)}</td>
+                    <td style="color: var(--color-ink); font-weight: 700;"><code>${escapeHtml(l.targetState)}</code></td>
                     <td><span class="badge-pass">${escapeHtml(l.stateOutput)}</span></td>
                 </tr>`;
             });
@@ -585,21 +585,21 @@ class AutomataApp {
                         <tbody>${rows}</tbody>
                     </table>
                 </div>
-                ${step.details.logs.length > 12 ? `<p style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">(Showing 12 of ${step.details.logs.length} transitions)</p>` : ''}
+                ${step.details.logs.length > 12 ? `<p style="font-size: 0.75rem; color: var(--color-text-muted); margin-top: 4px;">(Showing 12 of ${step.details.logs.length} transitions)</p>` : ''}
             `;
         }
 
         if (step.type === "reachability") {
-            const r = step.details.reachable.map(s => `<code style="color: #10b981;">${s}</code>`).join(", ");
+            const r = step.details.reachable.map(s => `<code style="color: var(--color-clay-deep);">${s}</code>`).join(", ");
             const u = step.details.unreachable.length > 0
-                ? step.details.unreachable.map(s => `<code style="color: #ef4444;">${s}</code>`).join(", ")
-                : '<span style="color: #64748b;">(None - all states reachable)</span>';
+                ? step.details.unreachable.map(s => `<code style="color: var(--color-text-muted); text-decoration: line-through;">${s}</code>`).join(", ")
+                : '<span style="color: var(--color-text-muted);">(None - all states reachable)</span>';
             return `
                 <div class="math-banner">
                     Reachable States: ${r}<br/>
                     Unreachable States: ${u}
                 </div>
-                <p style="font-size: 0.85rem; color: #94a3b8;">
+                <p style="font-size: 0.85rem; color: var(--color-ink-soft);">
                     ${step.details.pruned ? "Unreachable states have been automatically pruned from the final machine to ensure minimal representation." : "All states retained."}
                 </p>
             `;
@@ -611,10 +611,10 @@ class AutomataApp {
             map.forEach(m => {
                 rows += `<tr>
                     <td><code>${escapeHtml(m.fromState)}</code></td>
-                    <td style="color: #38bdf8; font-weight: bold;">${escapeHtml(m.symbol)}</td>
+                    <td style="color: var(--color-clay-deep); font-weight: 700;">${escapeHtml(m.symbol)}</td>
                     <td><code>${escapeHtml(m.toState)}</code></td>
                     <td><span class="badge-pass">${escapeHtml(m.targetStateOutput)}</span></td>
-                    <td style="color: #38bdf8; font-weight: bold;">${escapeHtml(m.mealyAssignedOutput)}</td>
+                    <td style="color: var(--color-ink); font-weight: 700;">${escapeHtml(m.mealyAssignedOutput)}</td>
                 </tr>`;
             });
             return `
@@ -698,7 +698,7 @@ class AutomataApp {
             inputTape.appendChild(cell);
         });
         if (status.inputChars.length === 0) {
-            inputTape.innerHTML = '<span style="color:#64748b; font-size:0.85rem; padding: 6px;">ε (Empty String)</span>';
+            inputTape.innerHTML = '<span style="color:var(--color-text-muted); font-size:0.825rem; padding: 6px;">ε (Empty String)</span>';
         }
 
         // Render Mealy & Moore Tapes
@@ -717,7 +717,7 @@ class AutomataApp {
             mealyTape.appendChild(cell);
         });
         if (mealyChars.length === 0) {
-            mealyTape.innerHTML = '<span style="color:#64748b; font-size:0.85rem; padding: 6px;">(No output yet)</span>';
+            mealyTape.innerHTML = '<span style="color:var(--color-text-muted); font-size:0.825rem; padding: 6px;">(No output yet)</span>';
         }
 
         mooreChars.forEach((ch, idx) => {
@@ -728,7 +728,7 @@ class AutomataApp {
             mooreTape.appendChild(cell);
         });
         if (mooreChars.length === 0) {
-            mooreTape.innerHTML = '<span style="color:#64748b; font-size:0.85rem; padding: 6px;">(No output yet)</span>';
+            mooreTape.innerHTML = '<span style="color:var(--color-text-muted); font-size:0.825rem; padding: 6px;">(No output yet)</span>';
         }
 
         // Equivalence Proof Check
@@ -741,8 +741,8 @@ class AutomataApp {
             eqBanner.className = "equivalence-banner";
             eqBanner.innerHTML = `
                 <div>
-                    <span style="font-weight: 700; color: #10b981;">&#10004; EQUIVALENCE VERIFIED</span>
-                    <span style="font-size: 0.85rem; color: #94a3b8; margin-left: 8px;">
+                    <span style="font-weight: 700; color: var(--color-sage-ink);">&#10004; EQUIVALENCE VERIFIED</span>
+                    <span style="font-size: 0.85rem; color: var(--color-ink-soft); margin-left: 8px;">
                         Moore Reaction Output [<code>${escapeHtml(mooreReaction) || "ε"}</code>] matches Mealy Output [<code>${escapeHtml(mealyStr) || "ε"}</code>]
                     </span>
                 </div>
@@ -752,7 +752,7 @@ class AutomataApp {
             eqBanner.className = "equivalence-banner fail";
             eqBanner.innerHTML = `
                 <div>
-                    <span style="font-weight: 700; color: #ef4444;">&#10008; MISMATCH DETECTED</span>
+                    <span style="font-weight: 700; color: var(--color-clay-deep);">&#10008; MISMATCH DETECTED</span>
                 </div>
                 <span class="badge-fail">FAIL</span>
             `;
@@ -791,10 +791,10 @@ class AutomataApp {
                 <td>${idx + 1}</td>
                 <td><code>${escapeHtml(r.input)}</code></td>
                 <td>${r.length}</td>
-                <td style="color: #38bdf8;"><code>${escapeHtml(r.mealyOutput)}</code></td>
+                <td style="color: var(--color-ink); font-weight: 600;"><code>${escapeHtml(r.mealyOutput)}</code></td>
                 <td>
-                    <span style="color: #f59e0b; font-weight: bold;">${escapeHtml(r.mooreInitialSymbol)}</span>
-                    <span style="color: #10b981;">${escapeHtml(r.mooreReaction)}</span>
+                    <span style="color: var(--color-clay-deep); font-weight: 700;">${escapeHtml(r.mooreInitialSymbol)}</span>
+                    <span style="color: var(--color-ink);">${escapeHtml(r.mooreReaction)}</span>
                 </td>
                 <td>
                     <span class="${r.isEquivalent ? 'badge-pass' : 'badge-fail'}">
@@ -807,7 +807,7 @@ class AutomataApp {
 
         // Summary
         document.getElementById("batch-summary-text").innerHTML = `
-            Passed <strong style="color: #10b981;">${report.passed}</strong> of <strong>${report.total}</strong> test cases
+            Passed <strong style="color: var(--color-clay-deep);">${report.passed}</strong> of <strong>${report.total}</strong> test cases
             (${((report.passed / report.total) * 100).toFixed(0)}% Equivalence Accuracy).
         `;
     }

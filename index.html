@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mealy &harr; Moore Automata Simulator | CSET302 Topic 14</title>
-    <!-- Google Fonts -->
+    <!-- Google Fonts (Anthropic Editorial Triad: Space Grotesk, Source Serif 4, IBM Plex Mono) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
     <!-- Main Header -->
     <header class="app-header">
-        <div style="display: flex; align-items: center; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 1.25rem;">
             <div style="display: flex; flex-direction: column;">
-                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; color: #f8fafc;">
-                        AUTOSIM <span style="color: var(--primary);">Mealy &harr; Moore</span>
-                    </span>
+                <div class="brand-title">
+                    <span>AUTOSIM</span>
+                    <span style="font-weight: 400; color: var(--color-ink-soft);">&mdash; Mealy &harr; Moore</span>
                     <span class="brand-badge">Topic 14</span>
                 </div>
-                <span style="font-size: 0.75rem; color: var(--text-muted);">
-                    CSET302: Automata Theory and Computability | 5-Member Team Simulator
-                </span>
+                <div class="header-subtitle">
+                    CSET302: Automata Theory and Computability &bull; 5-Member Team Research Simulator
+                </div>
             </div>
         </div>
 
@@ -85,9 +84,9 @@
                 <div class="cyber-card">
                     <div class="card-header">
                         <span class="card-title">
-                            <span style="color: var(--primary);">&#x25A3;</span> Dynamic Input Specification
+                            Dynamic Input Specification
                         </span>
-                        <span id="source-type-label" class="badge-pass" style="color: var(--primary); border-color: var(--primary);">
+                        <span id="source-type-label" class="brand-badge">
                             Mealy Machine
                         </span>
                     </div>
@@ -166,9 +165,9 @@
                     <div class="cyber-card">
                         <div class="card-header">
                             <span class="card-title">
-                                <span style="color: var(--accent);">&#x25BA;</span> Dynamic String Processing & Output Verification
+                                Dynamic String Processing & Output Verification
                             </span>
-                            <span id="sim-step-status-text" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">
+                            <span id="sim-step-status-text" style="font-family: var(--font-mono); font-size: 0.825rem; color: var(--color-text-muted);">
                                 Step 0 of 0
                             </span>
                         </div>
@@ -206,12 +205,12 @@
                             </div>
                             <!-- Mealy Stream -->
                             <div class="tape-row">
-                                <div class="tape-label" style="color: var(--primary);">Mealy Output (&lambda;)</div>
+                                <div class="tape-label" style="color: var(--color-ink);">Mealy Output (&lambda;)</div>
                                 <div id="tape-mealy-cells" class="tape-cells-stream"></div>
                             </div>
                             <!-- Moore Stream -->
                             <div class="tape-row">
-                                <div class="tape-label" style="color: var(--warning);">Moore Output</div>
+                                <div class="tape-label" style="color: var(--color-clay-deep);">Moore Output</div>
                                 <div id="tape-moore-cells" class="tape-cells-stream"></div>
                             </div>
                         </div>
@@ -266,7 +265,7 @@
             <div class="cyber-card">
                 <div class="card-header">
                     <span class="card-title">
-                        <span style="color: var(--accent);">&#x2714;</span> Automated Equivalence Test Suite
+                        Automated Equivalence Test Suite
                     </span>
                     <button id="btn-run-batch-tests" class="btn btn-accent btn-sm">
                         &#9654; Execute Verification Suite
@@ -550,7 +549,7 @@
                 <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem;">
                     <div class="team-member-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 1: Formal Modeling & Architecture Lead</strong>
+                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 1: Formal Modeling & Architecture Lead</strong>
                             <span class="badge-pass">Formal 6-Tuple & Architecture</span>
                         </div>
                         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
@@ -562,19 +561,19 @@
 
                     <div class="team-member-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 2: Mealy &rarr; Moore Conversion & State Splitting</strong>
+                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 2: Mealy &rarr; Moore Conversion & State Splitting</strong>
                             <span class="badge-pass">Algorithm Implementation</span>
                         </div>
                         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
                             <strong>Core Responsibilities:</strong> Implemented incoming transitions analyzer, state splitting algorithm (\(q \to q_{b_1}, q_{b_2}\)), start state handling convention, and step-by-step conversion audit generator.
                             <br>
-                            <strong>Viva Focus:</strong> Why state splitting is necessary, upper bound on the number of generated Moore states (\(|Q_{Moore}| \le |Q_{Mealy}| \times |\Delta|\)), and handling of initial state \(q_0\).
+                            <strong>Viva Focus:</strong> Why state splitting is necessary, upper bound on the number of generated Moore states (\(|Q_{Moore}| \le |Q_{Mealy}| \times |\Delta|\), and handling of initial state \(q_0\).
                         </p>
                     </div>
 
                     <div class="team-member-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 3: Moore &rarr; Mealy Conversion & Equivalence Proofs</strong>
+                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 3: Moore &rarr; Mealy Conversion & Equivalence Proofs</strong>
                             <span class="badge-pass">Algorithm & Mathematical Proof</span>
                         </div>
                         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
@@ -586,7 +585,7 @@
 
                     <div class="team-member-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 4: Interactive Graph Visualizer & Animation Engine</strong>
+                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 4: Interactive Graph Visualizer & Animation Engine</strong>
                             <span class="badge-pass">UI & Visualization</span>
                         </div>
                         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
@@ -598,7 +597,7 @@
 
                     <div class="team-member-card">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: #38bdf8; font-size: 1.05rem;">Team Member 5: Verification Suite, Edge Cases & Testing Lead</strong>
+                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 5: Verification Suite, Edge Cases & Testing Lead</strong>
                             <span class="badge-pass">Verification & Quality</span>
                         </div>
                         <p style="margin-top: 0.5rem; font-size: 0.875rem;">
@@ -650,6 +649,52 @@
         </div>
 
     </main>
+
+    <!-- Inverted Grounding Directory Footer (Anthropic Study Section 8.5 & 14) -->
+    <footer class="app-footer">
+        <div class="footer-content">
+            <div>
+                <div class="footer-heading">AUTOSIM &bull; Topic 14</div>
+                <p class="footer-text">
+                    A research-grade automata theory laboratory for Mealy &harr; Moore conversion,
+                    formal verification, and dynamic state-splitting analysis.
+                </p>
+            </div>
+            <div>
+                <div class="footer-heading">Core Modules</div>
+                <ul class="footer-links">
+                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-simulator\']').click()">Dynamic Simulator</a></li>
+                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-stepper\']').click()">Step-by-Step Audit</a></li>
+                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-batch\']').click()">Batch Test Suite</a></li>
+                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-m1\']').click()">M1 Design Review</a></li>
+                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-m2\']').click()">M2 Verification</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-heading">Classic Presets</div>
+                <ul class="footer-links">
+                    <li><a href="javascript:void(0)" onclick="window.app.loadPreset('seq101_mealy')">101 Sequence Detector</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.app.loadPreset('twos_complement_mealy')">2's Complement Generator</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.app.loadPreset('ones_complement_mealy')">1's Complement Inverter</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.app.setConversionMode('moore_to_mealy'); window.app.loadPreset('parity_moore');">Parity Bit Generator</a></li>
+                    <li><a href="javascript:void(0)" onclick="window.app.setConversionMode('moore_to_mealy'); window.app.loadPreset('mod3_moore');">Modulo-3 Counter</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-heading">Academic Context</div>
+                <ul class="footer-links">
+                    <li><span style="color: var(--color-cloud);">Course: CSET302</span></li>
+                    <li><span style="color: var(--color-cloud);">Topic: 14 (Mealy &harr; Moore)</span></li>
+                    <li><span style="color: var(--color-cloud);">Team: 5 Collaborators</span></li>
+                    <li><span style="color: var(--color-cloud);">Evaluation: M1 (5) + M2 (9)</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 AUTOSIM &bull; Automata Theory and Computability</span>
+            <span>Built with editorial clarity &amp; mathematical discipline</span>
+        </div>
+    </footer>
 
     <!-- Core Scripts -->
     <script src="js/mealy_moore_core.js"></script>
