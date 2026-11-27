@@ -1,0 +1,5 @@
+# Ignore Python backend scripts during Vercel static build
+server.py
+generate_report_pdf.py
+python_core/
+requirements.txt

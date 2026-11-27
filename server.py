@@ -103,6 +103,10 @@ class AutomataRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
+# Top-level handler for Vercel Serverless Function runtime
+handler = AutomataRequestHandler
+
+
 def run_server():
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), AutomataRequestHandler) as httpd:
