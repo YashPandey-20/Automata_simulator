@@ -103,8 +103,13 @@ class AutomataRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
 
-# Top-level handler for Vercel Serverless Function runtime
-handler = AutomataRequestHandler
+# Top-level entrypoints for Vercel Serverless Function runtime
+class handler(AutomataRequestHandler):
+    """Vercel Serverless HTTP entrypoint."""
+    pass
+
+app = handler
+application = handler
 
 
 def run_server():
