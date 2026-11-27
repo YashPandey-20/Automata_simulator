@@ -51,6 +51,9 @@ class AutomataApp {
         this.bindBatchTesting();
         this.bindExportImport();
 
+        // Populate presets dropdown on startup
+        this.populatePresetsDropdown();
+
         // Load default preset: Sequence Detector 101
         this.loadPreset("seq101_mealy");
     }
@@ -87,62 +90,99 @@ class AutomataApp {
         const btnMealyToMoore = document.getElementById("mode-mealy-to-moore");
         const btnMooreToMealy = document.getElementById("mode-moore-to-mealy");
 
-        btnMealyToMoore.addEventListener("click", () => {
-            if (this.currentMode === "mealy_to_moore") return;
-            this.setConversionMode("mealy_to_moore");
-            this.loadPreset("seq101_mealy");
-        });
+        if (btnMealyToMoore) {
+            btnMealyToMoore.addEventListener("click", () => {
+                if (this.currentMode === "mealy_to_moore") return;
+                this.setConversionMode("mealy_to_moore");
+                this.loadPreset("seq101_mealy");
+            });
+        }
 
-        btnMooreToMealy.addEventListener("click", () => {
-            if (this.currentMode === "moore_to_mealy") return;
-            this.setConversionMode("moore_to_mealy");
-            this.loadPreset("parity_moore");
-        });
+        if (btnMooreToMealy) {
+            btnMooreToMealy.addEventListener("click", () => {
+                if (this.currentMode === "moore_to_mealy") return;
+                this.setConversionMode("moore_to_mealy");
+                this.loadPreset("parity_moore");
+            });
+        }
     }
 
     setConversionMode(mode) {
         this.currentMode = mode;
         const btnM2M = document.getElementById("mode-mealy-to-moore");
         const btnM2Mealy = document.getElementById("mode-moore-to-mealy");
+        const srcLabel = document.getElementById("source-type-label");
+        const tgtLabel = document.getElementById("target-type-label");
+        const mealyOpts = document.getElementById("mealy-specific-options");
 
         if (mode === "mealy_to_moore") {
-            btnM2M.classList.add("active");
-            btnM2Mealy.classList.remove("active");
-            document.getElementById("source-type-label").innerText = "Mealy Machine";
-            document.getElementById("target-type-label").innerText = "Moore Machine";
-            this.sourceVisualizer.options.title = "Source Machine (Mealy)";
-            this.targetVisualizer.options.title = "Converted Machine (Moore)";
-            document.getElementById("mealy-specific-options").style.display = "block";
+            if (btnM2M) btnM2M.classList.add("active");
+            if (btnM2Mealy) btnM2Mealy.classList.remove("active");
+            if (srcLabel) srcLabel.innerText = "Mealy Machine";
+            if (tgtLabel) tgtLabel.innerText = "Moore Machine";
+            if (this.sourceVisualizer) this.sourceVisualizer.options.title = "Source Machine (Mealy)";
+            if (this.targetVisualizer) this.targetVisualizer.options.title = "Converted Machine (Moore)";
+            if (mealyOpts) mealyOpts.style.display = "block";
         } else {
-            btnM2Mealy.classList.add("active");
-            btnM2M.classList.remove("active");
-            document.getElementById("source-type-label").innerText = "Moore Machine";
-            document.getElementById("target-type-label").innerText = "Mealy Machine";
-            this.sourceVisualizer.options.title = "Source Machine (Moore)";
-            this.targetVisualizer.options.title = "Converted Machine (Mealy)";
-            document.getElementById("mealy-specific-options").style.display = "none";
+            if (btnM2Mealy) btnM2Mealy.classList.add("active");
+            if (btnM2M) btnM2M.classList.remove("active");
+            if (srcLabel) srcLabel.innerText = "Moore Machine";
+            if (tgtLabel) tgtLabel.innerText = "Mealy Machine";
+            if (this.sourceVisualizer) this.sourceVisualizer.options.title = "Source Machine (Moore)";
+            if (this.targetVisualizer) this.targetVisualizer.options.title = "Converted Machine (Mealy)";
+            if (mealyOpts) mealyOpts.style.display = "none";
         }
         this.populatePresetsDropdown();
     }
 
     populatePresetsDropdown() {
         const select = document.getElementById("preset-select");
+        if (!select || typeof AUTOMATA_PRESETS === "undefined") return;
+
         select.innerHTML = '<option value="">-- Choose a Pre-Configured Automaton --</option>';
 
+        const mealyGroup = document.createElement("optgroup");
+        mealyGroup.label = "Mealy → Moore Presets";
+
+        const mooreGroup = document.createElement("optgroup");
+        mooreGroup.label = "Moore → Mealy Presets";
+
         for (const [key, preset] of Object.entries(AUTOMATA_PRESETS)) {
-            const matchesMode = (this.currentMode === "mealy_to_moore" && preset.type === "Mealy") ||
-                                (this.currentMode === "moore_to_mealy" && preset.type === "Moore");
-            if (matchesMode) {
-                const opt = document.createElement("option");
-                opt.value = key;
-                opt.textContent = `${preset.name} (${preset.category})`;
-                select.appendChild(opt);
+            const opt = document.createElement("option");
+            opt.value = key;
+            opt.textContent = preset.name;
+            if (preset.type === "Mealy") {
+                mealyGroup.appendChild(opt);
+            } else {
+                mooreGroup.appendChild(opt);
             }
+        }
+
+        select.appendChild(mealyGroup);
+        select.appendChild(mooreGroup);
+
+        // Keep current selected preset highlighted
+        if (this.currentPresetId) {
+            select.value = this.currentPresetId;
         }
     }
 
     loadPreset(presetId) {
+        if (typeof AUTOMATA_PRESETS === "undefined") return;
         const preset = AUTOMATA_PRESETS[presetId];
+        if (!preset) return;
+
+        this.currentPresetId = presetId;
+
+        // Auto-switch conversion mode if preset type doesn't match
+        if (preset.type === "Mealy" && this.currentMode !== "mealy_to_moore") {
+            this.setConversionMode("mealy_to_moore");
+        } else if (preset.type === "Moore" && this.currentMode !== "moore_to_mealy") {
+            this.setConversionMode("moore_to_mealy");
+        }
+
+        const presetSelect = document.getElementById("preset-select");
+        if (presetSelect) presetSelect.value = presetId;
         if (!preset) return;
 
         document.getElementById("machine-name").value = preset.name;

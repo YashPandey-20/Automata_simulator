@@ -14,48 +14,27 @@
 
     <!-- Main Header -->
     <header class="app-header">
-        <div style="display: flex; align-items: center; gap: 1.25rem;">
-            <div style="display: flex; flex-direction: column;">
-                <div class="brand-title">
-                    <span>AUTOSIM</span>
-                    <span style="font-weight: 400; color: var(--color-ink-soft);">&mdash; Mealy &harr; Moore</span>
-                    <span class="brand-badge">Topic 14</span>
-                </div>
-                <div class="header-subtitle">
-                    CSET302: Automata Theory and Computability &bull; 5-Member Team Research Simulator
-                </div>
-            </div>
+        <div class="brand-area">
+            <span class="brand-title">AUTOSIM</span>
+            <span class="brand-separator">/</span>
+            <span class="brand-subtitle">Mealy &harr; Moore</span>
         </div>
 
-        <!-- Navigation Tabs -->
+        <!-- Minimalist Navigation Tabs -->
         <nav class="nav-tabs">
-            <button class="nav-tab-btn active" data-tab="tab-simulator">
-                <span>&#x25C9;</span> Simulator
-            </button>
-            <button class="nav-tab-btn" data-tab="tab-stepper">
-                <span>&#x21C9;</span> Step-by-Step
-            </button>
-            <button class="nav-tab-btn" data-tab="tab-batch">
-                <span>&#x2714;</span> Batch Validation
-            </button>
-            <button class="nav-tab-btn" data-tab="tab-m1">
-                <span>&#x1F4CB;</span> M1 Design Review
-            </button>
-            <button class="nav-tab-btn" data-tab="tab-m2">
-                <span>&#x1F4CA;</span> M2 Testing & Eval
-            </button>
-            <button class="nav-tab-btn" data-tab="tab-team">
-                <span>&#x1F465;</span> Team & Viva Prep
-            </button>
+            <button class="nav-tab-btn active" data-tab="tab-simulator">Simulator</button>
+            <button class="nav-tab-btn" data-tab="tab-stepper">Step-by-Step</button>
+            <button class="nav-tab-btn" data-tab="tab-batch">Batch Testing</button>
+            <button class="nav-tab-btn" data-tab="tab-milestones">Milestones</button>
         </nav>
 
         <!-- Actions -->
-        <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <div class="header-actions">
             <button id="btn-export-json" class="btn btn-outline btn-sm" title="Export Automaton JSON">
-                &#x21e9; Export JSON
+                Export JSON
             </button>
             <button id="btn-import-json" class="btn btn-outline btn-sm" title="Import Automaton JSON">
-                &#x21e7; Import JSON
+                Import JSON
             </button>
             <input type="file" id="import-json-file" accept=".json" style="display: none;">
         </div>
@@ -221,8 +200,8 @@
                         <!-- Mathematical Proof Note -->
                         <div class="math-banner" style="font-size: 0.8rem; margin-bottom: 0;">
                             <strong>Equivalence Property:</strong>
-                            Moore outputs \(n+1\) symbols starting with \(\lambda_{Moore}(q_0)\).
-                            The response portion \(\lambda_{Moore}(w)[1 \dots n]\) is guaranteed to be bitwise identical to \(\lambda_{Mealy}(w)[0 \dots n-1]\).
+                            Moore outputs <em>n</em>+1 symbols starting with &lambda;<sub>Moore</sub>(<em>q</em><sub>0</sub>).
+                            The reaction portion &lambda;<sub>Moore</sub>(<em>w</em>)[1&hellip;<em>n</em>] is guaranteed to be bitwise identical to &lambda;<sub>Mealy</sub>(<em>w</em>)[0&hellip;<em>n</em>-1].
                         </div>
                     </div>
 
@@ -313,204 +292,136 @@
         </div>
 
         <!-- ==========================================
-             TAB 4: MILESTONE 1 (M1) DESIGN REVIEW
+             TAB 4: MILESTONES (DESIGN & VERIFICATION)
              ========================================== -->
-        <div id="tab-m1" class="tab-pane">
+        <div id="tab-milestones" class="tab-pane">
             <div class="cyber-card docs-prose">
-                <h2>Milestone 1: Problem Analysis & Project Design (5 Marks)</h2>
-                <div class="math-banner">
-                    Evaluation Period: 2-6 November 2026 | Course: CSET302 Automata Theory and Computability
-                </div>
+                <h2>Milestone Specifications &amp; Formal Verification</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.25rem;">
+                    Formal automata specifications, conversion theorems, and verified benchmark suite for Topic 14 (Mealy &harr; Moore).
+                </p>
 
+                <!-- Formal Models & Equivalence -->
                 <div class="docs-card">
-                    <h3>1. Problem Definition & Formal Automata Specifications (1 Mark)</h3>
-                    <p>
-                        Finite State Machines with outputs are categorized into two foundational formalisms:
-                    </p>
-                    <ul>
-                        <li>
-                            <strong>Mealy Machine:</strong> A 6-tuple \(M_1 = (Q, \Sigma, \Delta, \delta, \lambda, q_0)\), where the output function \(\lambda: Q \times \Sigma \to \Delta\) associates output symbols with state transitions.
-                        </li>
-                        <li>
-                            <strong>Moore Machine:</strong> A 6-tuple \(M_2 = (Q', \Sigma, \Delta, \delta', \lambda', q_0')\), where the output function \(\lambda': Q' \to \Delta\) associates output symbols strictly with states.
-                        </li>
-                    </ul>
-                    <p>
-                        <strong>Conversion Equivalence Theorem:</strong> For any Mealy machine \(M_1\), there exists an equivalent Moore machine \(M_2\) such that for every input string \(w \in \Sigma^*\):
-                        \[
-                            \text{Output}_{M_2}(w) = \lambda'(q_0') \cdot \text{Output}_{M_1}(w)
-                        \]
-                        Conversely, for any Moore machine \(M_2\), there exists an equivalent Mealy machine \(M_1\) such that \(\text{Output}_{M_1}(w)\) matches the reaction output of \(M_2\) for all \(w\) with \(|w| \ge 1\).
-                    </p>
-                </div>
-
-                <div class="docs-card">
-                    <h3>2. Analysis of Existing Automata Tools & Feasibility (1 Mark)</h3>
-                    <div class="matrix-table-wrapper">
-                        <table class="matrix-table" style="font-family: var(--font-sans);">
-                            <thead>
-                                <tr>
-                                    <th>Feature / Parameter</th>
-                                    <th>JFLAP 7.1</th>
-                                    <th>AutomataLab / WebSim</th>
-                                    <th>Our Proposed AUTOSIM System</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Technology Stack</td>
-                                    <td>Legacy Java Swing (desktop app)</td>
-                                    <td>Basic JS / Canvas</td>
-                                    <td>Modern ES6 + SVG Drag/Pan/Zoom + Python Core</td>
-                                </tr>
-                                <tr>
-                                    <td>Mealy &harr; Moore Conversion</td>
-                                    <td>Separate tools, minimal steps</td>
-                                    <td>Static table conversion only</td>
-                                    <td>Bidirectional with interactive animated step-by-step audit</td>
-                                </tr>
-                                <tr>
-                                    <td>Real-time String Simulation</td>
-                                    <td>Step-through on single graph</td>
-                                    <td>Text-only output</td>
-                                    <td>Dual Synchronized Graphs + Tapes + Equivalence Badge</td>
-                                </tr>
-                                <tr>
-                                    <td>Edge Case & Reachability</td>
-                                    <td>Manual state cleanup</td>
-                                    <td>No reachability pruning</td>
-                                    <td>Automated BFS Reachability Analysis & State Pruning</td>
-                                </tr>
-                                <tr>
-                                    <td>Export & Portability</td>
-                                    <td>Proprietary .jff XML format</td>
-                                    <td>Limited export</td>
-                                    <td>Clean JSON, SVG vector export, Printable Academic Report</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <h3>1. Formal 6-Tuple Automata Specifications</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem;">
+                        <div style="background: var(--color-canvas); padding: 0.85rem; border-radius: 6px; border: 1px solid var(--color-hairline);">
+                            <strong style="color: var(--color-ink);">Mealy Machine (Output on Transitions)</strong>
+                            <p style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 0.35rem; color: var(--color-ink-soft);">
+                                M<sub>1</sub> = (Q, &Sigma;, &Delta;, &delta;, &lambda;, q<sub>0</sub>)
+                            </p>
+                            <p style="font-size: 0.825rem; margin-top: 0.25rem; color: var(--text-secondary);">
+                                Output function: &lambda;: Q &times; &Sigma; &rarr; &Delta;<br>
+                                Output length: |Output(w)| = |w| = n
+                            </p>
+                        </div>
+                        <div style="background: var(--color-canvas); padding: 0.85rem; border-radius: 6px; border: 1px solid var(--color-hairline);">
+                            <strong style="color: var(--color-ink);">Moore Machine (Output on States)</strong>
+                            <p style="font-family: var(--font-mono); font-size: 0.85rem; margin-top: 0.35rem; color: var(--color-ink-soft);">
+                                M<sub>2</sub> = (Q', &Sigma;, &Delta;, &delta;', &lambda;', q<sub>0</sub>')
+                            </p>
+                            <p style="font-size: 0.825rem; margin-top: 0.25rem; color: var(--text-secondary);">
+                                Output function: &lambda;': Q' &rarr; &Delta;<br>
+                                Output length: |Output(w)| = |w| + 1 = n + 1
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="docs-card">
-                    <h3>3. Simulator Architecture & Methodology (2 Marks)</h3>
-                    <p>
-                        The simulator is built on a modular, decoupled architecture following the strict standard:
+                    <div class="math-banner" style="margin-top: 1rem; font-size: 0.85rem;">
+                        <strong>Conversion Equivalence Theorem:</strong><br>
+                        For any Mealy machine M<sub>1</sub>, there exists an equivalent Moore machine M<sub>2</sub> such that for every input string w &in; &Sigma;<sup>*</sup>:
                         <br>
-                        <code>User Input &rarr; Formal Algorithm Engine &rarr; Step-by-Step Generator &rarr; Visual Graph Engine &rarr; Validation & Testing</code>
-                    </p>
-                    <div class="math-banner">
-                        <strong>Architecture Flow:</strong><br>
-                        1. <strong>Input Module:</strong> Matrix grid editor + preset parser + JSON schema validator.<br>
-                        2. <strong>Automata Core:</strong> Formal classes `MealyMachine` and `MooreMachine` implementing 6-tuple specifications.<br>
-                        3. <strong>Conversion Engine:</strong> State-splitting algorithm with BFS reachability and target-output inheritance.<br>
-                        4. <strong>Visualization Layer:</strong> Pure SVG visualizer supporting curved directed edges, self-loops, and real-time step highlighting.<br>
-                        5. <strong>Validation Engine:</strong> Synchronized tape animator with bit-for-bit equivalence comparison.
+                        <span style="font-family: var(--font-mono); font-weight: 600; display: inline-block; margin-top: 0.25rem;">
+                            Output<sub>M<sub>2</sub></sub>(w) = &lambda;'(q<sub>0</sub>') &middot; Output<sub>M<sub>1</sub></sub>(w)
+                        </span>
+                        <br>
+                        <span style="color: var(--text-secondary); font-size: 0.8rem;">
+                            Disregarding the initial state output &lambda;'(q<sub>0</sub>') emitted at step 0, both machines produce bitwise identical response streams for all inputs.
+                        </span>
                     </div>
                 </div>
 
+                <!-- Bidirectional Conversion Algorithms -->
                 <div class="docs-card">
-                    <h3>4. Selection & Correctness of Algorithms (1 Mark)</h3>
-                    <p><strong>Mealy to Moore Algorithm:</strong></p>
-                    <ol style="margin-left: 1.5rem;">
-                        <li>Compute incoming output set: \(Out(q) = \{ \lambda(p, a) \mid \delta(p, a) = q \}\) for all \(q \in Q\).</li>
-                        <li>For each \(b \in Out(q)\), create split state \(q_b\) with Moore state output \(\lambda'(q_b) = b\).</li>
-                        <li>Handle initial state: assign \((q_0, \lambda_0)\) where \(\lambda_0\) is designated initial symbol.</li>
-                        <li>Map transitions: \(\delta'((q, b), a) = (\delta(q, a), \lambda(q, a))\).</li>
-                        <li>Execute BFS from \((q_0, \lambda_0)\) to identify and prune unreachable states.</li>
-                    </ol>
-                    <p style="margin-top: 0.75rem;"><strong>Moore to Mealy Algorithm:</strong></p>
-                    <ol style="margin-left: 1.5rem;">
-                        <li>Retain state set \(Q_{Mealy} = Q_{Moore}\) and initial state \(q_0\).</li>
-                        <li>For each transition \(\delta(q, a) = q'\), assign Mealy transition output: \(\lambda_{Mealy}(q, a) = \lambda_{Moore}(q')\).</li>
-                    </ol>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================
-             TAB 5: MILESTONE 2 (M2) TESTING & EVALUATION
-             ========================================== -->
-        <div id="tab-m2" class="tab-pane">
-            <div class="cyber-card docs-prose">
-                <h2>Milestone 2: Implementation, Testing & Demonstration (9 Marks)</h2>
-                <div class="math-banner">
-                    Evaluation Period: 23-27 November 2026 | Focus: Working Simulator, Edge Cases, Verification
+                    <h3>2. Bidirectional Conversion Principles</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.75rem;">
+                        <div>
+                            <strong style="color: var(--color-ink); font-size: 0.9rem;">Mealy &rarr; Moore (State Splitting)</strong>
+                            <ol style="margin-left: 1.25rem; font-size: 0.825rem; margin-top: 0.35rem; color: var(--text-secondary); line-height: 1.6;">
+                                <li>Compute incoming outputs: Out(q) = { &lambda;(p, a) | &delta;(p, a) = q }.</li>
+                                <li>If a state is entered with multiple outputs, split it into (q, b) with &lambda;'(q, b) = b.</li>
+                                <li>Redirect incoming transitions with output b to state (q, b).</li>
+                                <li>Upper bound: |Q<sub>Moore</sub>| &le; |Q<sub>Mealy</sub>| &times; |&Delta;|.</li>
+                                <li>Run BFS from q<sub>0</sub> to prune unreachable states.</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <strong style="color: var(--color-ink); font-size: 0.9rem;">Moore &rarr; Mealy (Output Inheritance)</strong>
+                            <ol style="margin-left: 1.25rem; font-size: 0.825rem; margin-top: 0.35rem; color: var(--text-secondary); line-height: 1.6;">
+                                <li>Retain identical state set Q and initial state q<sub>0</sub>.</li>
+                                <li>State count never increases: |Q<sub>Mealy</sub>| = |Q<sub>Moore</sub>|.</li>
+                                <li>Each transition inherits the output of its destination state: &lambda;<sub>Mealy</sub>(q, a) = &lambda;<sub>Moore</sub>(&delta;(q, a)).</li>
+                                <li>Direct 1-step deterministic construction.</li>
+                            </ol>
+                        </div>
+                    </div>
                 </div>
 
+                <!-- Benchmark Verification Table -->
                 <div class="docs-card">
-                    <h3>1. Implementation Coverage of Planned Features (2 Marks)</h3>
-                    <ul>
-                        <li>&check; Full bidirectional conversion (Mealy &rarr; Moore and Moore &rarr; Mealy).</li>
-                        <li>&check; Dynamic matrix input with real-time state, symbol, and transition additions.</li>
-                        <li>&check; Interactive SVG graph visualizer with draggable nodes, curved arcs, and auto-layout.</li>
-                        <li>&check; Synchronized dual-tape simulation with step-by-step animation and speed adjustment.</li>
-                        <li>&check; Step-by-step conversion audit trail with mathematical justifications at every step.</li>
-                        <li>&check; Automated batch test suite with timing and pass/fail reporting.</li>
-                    </ul>
-                </div>
-
-                <div class="docs-card">
-                    <h3>2. Demonstration & Test Case Suite (2 Marks)</h3>
-                    <div class="matrix-table-wrapper">
-                        <table class="matrix-table" style="font-family: var(--font-sans);">
+                    <h3>3. Verified Test &amp; Edge Case Suite</h3>
+                    <div class="matrix-table-wrapper" style="margin-top: 0.5rem;">
+                        <table class="matrix-table" style="font-family: var(--font-sans); font-size: 0.825rem;">
                             <thead>
                                 <tr>
-                                    <th>Test Case ID</th>
-                                    <th>Automaton Type & Purpose</th>
-                                    <th>Normal / Edge Case</th>
-                                    <th>Expected Theoretical Result</th>
-                                    <th>Verification Status</th>
+                                    <th>ID</th>
+                                    <th>Automaton Name</th>
+                                    <th>Model &amp; Case Type</th>
+                                    <th>Expected Theoretical Behavior</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>TC-01</td>
-                                    <td>Sequence Detector "101" (Mealy)</td>
-                                    <td>Normal (Overlapping Substring)</td>
-                                    <td>Mealy outputs '1' at end of '101'; Moore produces matching shifted stream</td>
+                                    <td><strong>TC-01</strong></td>
+                                    <td>Sequence Detector "101"</td>
+                                    <td>Mealy &bull; Overlapping Substring</td>
+                                    <td>Outputs '1' at end of '101'; Moore produces matching shifted stream</td>
                                     <td><span class="badge-pass">PASS</span></td>
                                 </tr>
                                 <tr>
-                                    <td>TC-02</td>
+                                    <td><strong>TC-02</strong></td>
                                     <td>2's Complement Generator</td>
-                                    <td>Normal (LSB-to-MSB stream)</td>
-                                    <td>Copies bits until first '1', inverts remainder; outputs identical reaction</td>
+                                    <td>Mealy &bull; Bit-Serial Stream</td>
+                                    <td>Copies bits until first '1', inverts remainder; bitwise reaction equivalence</td>
                                     <td><span class="badge-pass">PASS</span></td>
                                 </tr>
                                 <tr>
-                                    <td>TC-03</td>
+                                    <td><strong>TC-03</strong></td>
                                     <td>1's Complement Inverter</td>
-                                    <td>Edge Case (Single-state machine)</td>
+                                    <td>Mealy &bull; Single-State Edge Case</td>
                                     <td>Single state splits into 2 Moore states with self-loops; full equivalence</td>
                                     <td><span class="badge-pass">PASS</span></td>
                                 </tr>
                                 <tr>
-                                    <td>TC-04</td>
-                                    <td>Parity Bit Generator (Moore)</td>
-                                    <td>Normal (Moore to Mealy)</td>
+                                    <td><strong>TC-04</strong></td>
+                                    <td>Parity Bit Generator</td>
+                                    <td>Moore &bull; State Count Preserved</td>
                                     <td>State count preserved (2 states); Mealy outputs parity transitions</td>
                                     <td><span class="badge-pass">PASS</span></td>
                                 </tr>
                                 <tr>
-                                    <td>TC-05</td>
-                                    <td>Modulo-3 Binary Counter (Moore)</td>
-                                    <td>Normal (3 output symbols: 0, 1, 2)</td>
-                                    <td>Converted Mealy correctly reflects remainder on every incoming bit</td>
+                                    <td><strong>TC-05</strong></td>
+                                    <td>Modulo-3 Counter</td>
+                                    <td>Moore &bull; Multi-Symbol (&Delta; = {0, 1, 2})</td>
+                                    <td>Converted Mealy reflects remainder on each bit; state count preserved</td>
                                     <td><span class="badge-pass">PASS</span></td>
                                 </tr>
                                 <tr>
-                                    <td>TC-06</td>
-                                    <td>Multi-Split Machine</td>
-                                    <td>Edge Case (3 distinct incoming outputs)</td>
-                                    <td>State Q2 splits into 3 distinct Moore states Q2_0, Q2_1, Q2_2</td>
-                                    <td><span class="badge-pass">PASS</span></td>
-                                </tr>
-                                <tr>
-                                    <td>TC-07</td>
+                                    <td><strong>TC-06</strong></td>
                                     <td>Empty String &epsilon;</td>
-                                    <td>Edge Case (Length 0 input)</td>
-                                    <td>Mealy produces &epsilon;; Moore produces single symbol \(\lambda(q_0)\)</td>
+                                    <td>Edge Case &bull; Length 0 Input</td>
+                                    <td>Mealy produces &epsilon;; Moore produces single initial symbol &lambda;(q<sub>0</sub>)</td>
                                     <td><span class="badge-pass">PASS</span></td>
                                 </tr>
                             </tbody>
@@ -518,183 +429,10 @@
                     </div>
                 </div>
 
-                <div class="docs-card">
-                    <h3>3. Formal Equivalence Proof Summary</h3>
-                    <p>
-                        Let \(M_1 = (Q, \Sigma, \Delta, \delta, \lambda, q_0)\) be a Mealy machine and \(M_2 = (Q', \Sigma, \Delta, \delta', \lambda', q_0')\) be the converted Moore machine constructed via the state splitting algorithm.
-                        <br>
-                        <strong>Basis:</strong> For \(|w| = 0\) (empty string \(\epsilon\)):
-                        \(\text{Output}_{M_1}(\epsilon) = \epsilon\), while \(\text{Output}_{M_2}(\epsilon) = \lambda'(q_0')\). Thus \(\text{Output}_{M_2}(\epsilon) = \lambda'(q_0') \cdot \text{Output}_{M_1}(\epsilon)\).
-                        <br>
-                        <strong>Inductive Step:</strong> Assume the hypothesis holds for string \(w = a_1 \dots a_k\). For string \(wa = a_1 \dots a_k a_{k+1}\):
-                        Let state reached by \(M_1\) after \(w\) be \(q_k\). The \((k+1)\)-th output of \(M_1\) is \(\lambda(q_k, a)\).
-                        In \(M_2\), the state reached is \((q_{k+1}, \lambda(q_k, a))\), whose state output is defined as \(\lambda(q_k, a)\).
-                        Therefore, the \((k+2)\)-th symbol of \(M_2\) equals the \((k+1)\)-th symbol of \(M_1\). By mathematical induction, output equivalence holds for all strings in \(\Sigma^*\).
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==========================================
-             TAB 6: TEAM CONTRIBUTION & VIVA PREPARATION
-             ========================================== -->
-        <div id="tab-team" class="tab-pane">
-            <div class="cyber-card docs-prose">
-                <h2>Team Contribution Breakdown & Viva Voce Preparation Guide</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
-                    Prepared for individual accountability evaluation (Section 9: "Every member should be prepared to explain the problem, relevant Automata Theory concepts, algorithm, their own contribution, input/output processing, important test cases, edge cases and project limitations").
-                </p>
-
-                <!-- 5 Member Work Division -->
-                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem; margin-bottom: 2rem;">
-                    <div class="team-member-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 1: Formal Modeling & Architecture Lead</strong>
-                            <span class="badge-pass">Formal 6-Tuple & Architecture</span>
-                        </div>
-                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                            <strong>Core Responsibilities:</strong> Designed formal 6-tuple definitions for Mealy and Moore machines in both Python and JavaScript; formulated data models and input validation constraints; authored Milestone-1 architectural specifications.
-                            <br>
-                            <strong>Viva Focus:</strong> Formal definitions of FSM with output, domain and codomain of transition (\(\delta\)) and output (\(\lambda\)) functions.
-                        </p>
-                    </div>
-
-                    <div class="team-member-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 2: Mealy &rarr; Moore Conversion & State Splitting</strong>
-                            <span class="badge-pass">Algorithm Implementation</span>
-                        </div>
-                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                            <strong>Core Responsibilities:</strong> Implemented incoming transitions analyzer, state splitting algorithm (\(q \to q_{b_1}, q_{b_2}\)), start state handling convention, and step-by-step conversion audit generator.
-                            <br>
-                            <strong>Viva Focus:</strong> Why state splitting is necessary, upper bound on the number of generated Moore states (\(|Q_{Moore}| \le |Q_{Mealy}| \times |\Delta|\), and handling of initial state \(q_0\).
-                        </p>
-                    </div>
-
-                    <div class="team-member-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 3: Moore &rarr; Mealy Conversion & Equivalence Proofs</strong>
-                            <span class="badge-pass">Algorithm & Mathematical Proof</span>
-                        </div>
-                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                            <strong>Core Responsibilities:</strong> Implemented deterministic 1-step Moore to Mealy output mapping (\(\lambda_{Mealy}(q, a) = \lambda_{Moore}(\delta(q, a))\)); authored formal inductive equivalence proof; proved relationship between output string lengths (\(n\) vs \(n+1\)).
-                            <br>
-                            <strong>Viva Focus:</strong> Why Moore to Mealy never increases the number of states, and why Moore output has length \(n+1\) for input of length \(n\).
-                        </p>
-                    </div>
-
-                    <div class="team-member-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 4: Interactive Graph Visualizer & Animation Engine</strong>
-                            <span class="badge-pass">UI & Visualization</span>
-                        </div>
-                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                            <strong>Core Responsibilities:</strong> Built SVG state diagram renderer with draggable nodes, curved directed edges, self-loop arcs, and SVG vector export; engineered synchronized node and edge pulsing animations during simulation.
-                            <br>
-                            <strong>Viva Focus:</strong> Visual distinctions between Mealy diagrams (edges with \(a/b\)) and Moore diagrams (states with \(q/b\)), graph layout algorithms.
-                        </p>
-                    </div>
-
-                    <div class="team-member-card">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <strong style="color: var(--color-ink); font-size: 1.05rem;">Team Member 5: Verification Suite, Edge Cases & Testing Lead</strong>
-                            <span class="badge-pass">Verification & Quality</span>
-                        </div>
-                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">
-                            <strong>Core Responsibilities:</strong> Designed automated batch test runner; developed preset library (2's complement, 1's complement, 101 detector, parity, mod 3); implemented BFS reachability pruning; authored Pytest test suite with 100% algorithm pass rate.
-                            <br>
-                            <strong>Viva Focus:</strong> Edge cases (unreachable states, empty string \(\epsilon\), single state machines), Pytest coverage, verification criteria.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Viva Voce Q&A Bank -->
-                <h3>Frequently Asked Viva Voce Questions & Model Answers</h3>
-
-                <div class="docs-card">
-                    <p><strong>Q1: What is the fundamental theoretical difference between a Mealy and a Moore machine?</strong></p>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                        <strong>Ans:</strong> In a Mealy machine, output is a function of both the current state and the input symbol (\(\lambda: Q \times \Sigma \to \Delta\)). In a Moore machine, output depends solely upon the current state (\(\lambda: Q \to \Delta\)). Consequently, for an input string of length \(n\), a Mealy machine emits \(n\) output symbols, whereas a Moore machine emits \(n+1\) symbols because it emits an initial output upon entering the start state prior to reading any input.
-                    </p>
-                </div>
-
-                <div class="docs-card">
-                    <p><strong>Q2: Why does converting Mealy to Moore sometimes increase the number of states?</strong></p>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                        <strong>Ans:</strong> A state \(q\) in a Mealy machine might be entered by multiple transitions producing different output symbols (e.g. entering \(q\) with output 0 on one transition and output 1 on another). Because a Moore machine state can only have one fixed output, \(q\) must split into multiple states \((q, 0)\) and \((q, 1)\). The maximum number of states in the converted Moore machine is \(|Q_{Mealy}| \times |\Delta|\).
-                    </p>
-                </div>
-
-                <div class="docs-card">
-                    <p><strong>Q3: Does converting Moore to Mealy ever change the number of states?</strong></p>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                        <strong>Ans:</strong> No. The state set \(Q\), initial state \(q_0\), and transition function \(\delta\) remain completely identical. Each transition \(\delta(q, a) = q'\) simply inherits the output of the target state: \(\lambda_{Mealy}(q, a) = \lambda_{Moore}(q')\).
-                    </p>
-                </div>
-
-                <div class="docs-card">
-                    <p><strong>Q4: How do you formally define equivalence between a Mealy and a Moore machine?</strong></p>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                        <strong>Ans:</strong> Two machines \(M_1\) (Mealy) and \(M_2\) (Moore) are equivalent if for all input strings \(w \in \Sigma^*\), \(\text{Output}_{M_2}(w) = \lambda_{M_2}(q_0) \cdot \text{Output}_{M_1}(w)\). That is, when the initial symbol emitted by the Moore machine before reading input is disregarded, both machines produce identical output strings of length \(n\).
-                    </p>
-                </div>
-
-                <div class="docs-card">
-                    <p><strong>Q5: What happens when the initial state \(q_0\) in a Mealy machine has no incoming transitions?</strong></p>
-                    <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                        <strong>Ans:</strong> If \(q_0\) has no incoming transitions, it has no transition output associated with entering it. In the converted Moore machine, \(q_0\) is assigned an arbitrary default output symbol from \(\Delta\) (typically the first symbol in \(\Delta\) or a designated dummy symbol \(\lambda_0\)). Since this symbol is only emitted at step 0 before any input is read, it does not affect reaction equivalence.
-                    </p>
-                </div>
             </div>
         </div>
 
     </main>
-
-    <!-- Inverted Grounding Directory Footer (Anthropic Study Section 8.5 & 14) -->
-    <footer class="app-footer">
-        <div class="footer-content">
-            <div>
-                <div class="footer-heading">AUTOSIM &bull; Topic 14</div>
-                <p class="footer-text">
-                    A research-grade automata theory laboratory for Mealy &harr; Moore conversion,
-                    formal verification, and dynamic state-splitting analysis.
-                </p>
-            </div>
-            <div>
-                <div class="footer-heading">Core Modules</div>
-                <ul class="footer-links">
-                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-simulator\']').click()">Dynamic Simulator</a></li>
-                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-stepper\']').click()">Step-by-Step Audit</a></li>
-                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-batch\']').click()">Batch Test Suite</a></li>
-                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-m1\']').click()">M1 Design Review</a></li>
-                    <li><a href="javascript:void(0)" onclick="document.querySelector('[data-tab=\'tab-m2\']').click()">M2 Verification</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-heading">Classic Presets</div>
-                <ul class="footer-links">
-                    <li><a href="javascript:void(0)" onclick="window.app.loadPreset('seq101_mealy')">101 Sequence Detector</a></li>
-                    <li><a href="javascript:void(0)" onclick="window.app.loadPreset('twos_complement_mealy')">2's Complement Generator</a></li>
-                    <li><a href="javascript:void(0)" onclick="window.app.loadPreset('ones_complement_mealy')">1's Complement Inverter</a></li>
-                    <li><a href="javascript:void(0)" onclick="window.app.setConversionMode('moore_to_mealy'); window.app.loadPreset('parity_moore');">Parity Bit Generator</a></li>
-                    <li><a href="javascript:void(0)" onclick="window.app.setConversionMode('moore_to_mealy'); window.app.loadPreset('mod3_moore');">Modulo-3 Counter</a></li>
-                </ul>
-            </div>
-            <div>
-                <div class="footer-heading">Academic Context</div>
-                <ul class="footer-links">
-                    <li><span style="color: var(--color-cloud);">Course: CSET302</span></li>
-                    <li><span style="color: var(--color-cloud);">Topic: 14 (Mealy &harr; Moore)</span></li>
-                    <li><span style="color: var(--color-cloud);">Team: 5 Collaborators</span></li>
-                    <li><span style="color: var(--color-cloud);">Evaluation: M1 (5) + M2 (9)</span></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <span>&copy; 2026 AUTOSIM &bull; Automata Theory and Computability</span>
-            <span>Built with editorial clarity &amp; mathematical discipline</span>
-        </div>
-    </footer>
 
     <!-- Core Scripts -->
     <script src="js/mealy_moore_core.js"></script>
